@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="./includes/a.css">
+  <link rel="icon" href="./includes/a.png"> 
+  
+  <script src='./includes/r_box.js'></script>
+  <script src='./includes/r_matrix.js'></script>
+  
+  <!-- the wonderful katex ! -->
+  <link rel="stylesheet" href="./includes/katex/katex.min.css">
+  <script src="./includes/katex/katex.min.js"></script>
+  <script src="./includes/a.js"></script>
+
+  <title> A4 Q8 &middot; </title>
+
+</head>
+
+
+<div class='section border margin padding'>
+
+  <h4> A4 Q8 </h4>
+
+</div>
+
+<div class='section border margin padding'><pre>
+<span style='color: blue'>library</span>(AER)
+<span style='color: blue'>library</span>("plm")
+
+rm(list = ls())   <span class='comment'># CLEAR VARIABLES</span>
+dev.off()         <span class='comment'># REMOVE GRAPHICS</span>
+
+<span style='color: blue'>source</span>("a4_q8_generate_data.R")
+
+set.seed(1971)
+df.T2 = a4_q8_generate_data(N = 10000, T = 2)</pre></div>
+
+<div class='section border margin padding'><pre>
+<span class='comment'># FIRST DIFFERENCES</span>
+df.T2.FD = data.frame(df.T2$y, df.T2$x1, df.T2$x2)
+colnames (df.T2.FD)[1] = "y"
+colnames (df.T2.FD)[2] = "x1"
+colnames (df.T2.FD)[3] = "x2"
+for (i in 2:nrow(df.T2.FD)) {
+  if (i%%2 == 0){
+    df.T2.FD$dy[i] = df.T2.FD$y[i] - df.T2.FD$y[i-1]
+    df.T2.FD$dx1[i] = df.T2.FD$x1[i] - df.T2.FD$x1[i-1]
+    df.T2.FD$dx2[i] = df.T2.FD$x2[i] - df.T2.FD$x2[i-1]  
+  }
+  
+}
+df.T2.FD = na.omit(df.T2.FD)
+model.FD = lm(dy ~ dx1 + dx2 - 1, data = df.T2.FD)
+summary(model.FD)</pre></div>
+
+<div class='section border margin padding'><pre>
+<span class='comment'># FIXED EFFECTS</span>
+model.FE = plm(y ~ x1 + x2, data = df.T2, index = c("entity", "time"), model = "within")
+summary(model.FE)</pre></div>
+
+<div class='section border margin padding'>
+<img src='./a4_q8_FD_vs_FE_T=2.png' /></div>
+
+<div class='section border margin padding'>
+
+  <h4> FE AND FD WHEN T = 2 </h4>
+
+  <p> in a stupid sort of way i think of this like folding the data in half </p>
+  <p> we're taking the differences in y and the regressors x within an entity from t=2 to t=1 </p>
+  <p><span class='math'> Y_{i,t=1} = \beta_0 + \beta_1 \cdot X_{1, i, t=1} + \beta_2 \cdot X_{2, i, t=1} + v_i + u_{i, t=1} </span></p>
+  <p><span class='math'> Y_{i,t=2} = \beta_0 + \beta_1 \cdot X_{1, i, t=2} + \beta_2 \cdot X_{2, i, t=2} + v_i + u_{i, t=2} </span></p>
+  
+  <p><span class='math'> \Big [ Y_{i,t=2} - Y_{i,t=1} \Big ] = \Big [ \beta_0 - \beta_0 \Big ] + \beta_1 \cdot \Big [ X_{1, i, t=2} - X_{1, i, t=1} \Big ] + \beta_2 \cdot \Big [ X_{2, i, t=2} - X_{2, i, t=1} \Big ] + \Big [ v_i - v_i \Big ] + \Big [ u_{i, t=2} - u_{i, t=1} \Big ] </span></p>
+  
+  <p><span class='math'> \Delta Y_{i} =  0 + \beta_1 \cdot \Delta X_{1,i} + \beta_2 \cdot \Delta X_{2,i} + 0 + \Delta u_i </span></p>
+  
+  <p><span class='math'> \Delta Y_{i} = \beta_1 \cdot \Delta X_{1,i} + \beta_2 \cdot \Delta X_{2,i} + \Delta u_i </span></p>
+  <p> so this lets us get an unbiased and consistent reading of the coefficients  </p>
+  
+</div>
+
+<div class='section border margin padding'>
+
+  <h4> FE AND FD WHEN T = 5 </h4>
+  
+
+</div>
+
+<div class='section border margin padding'><pre>
+<span class='comment'># WHEN T = 5</span>
+set.seed(1971)
+df.T5 = a4_q8_generate_data(N = 10000, T = 5)</pre></div>
+
+<div class='section border margin padding'>
+<img src='./a4_q8_FD_vs_FE_T=5.png' /></div>
+
+
+<div class='section border margin padding'><pre>
+<span class='comment'># TO GENERATE THE DATA</span>
+a4_q8_generate_data = function(N, T) {
+  
+  n = N / T # the number of entities we have
+  
+  df = data.frame(
+    'entity' = rep(0, times=N),
+    'v' = rep(0, times=N),
+    'u' = rep(0, times=N),
+    'x1' = rep(0, times=N),
+    'x2' = rep(0, times=N),
+    'y' = rep(0, times=N),
+    'time' = rep(0, times=N)
+  )
+  
+  for (i in 1:n) {
+    
+    v = rnorm(1, mean=0, sd=1)
+    for (t in 1:T) {
+      
+      u = rnorm(1, mean=0, sd=1)
+      x1 = rnorm(1, mean=v, sd=1)
+      x2 = rnorm(1, mean=v, sd=1)
+      y = x1 + x2 + v + u
+      
+      loc = (i-1)*T + t
+      
+      df$entity[loc] = i
+      df$v[loc] = v
+      df$u[loc] = u
+      df$x1[loc] = x1
+      df$x2[loc] = x2
+      df$y[loc] = y
+      df$time[loc] = t
+      
+    }
+  }
+  
+  <span style='color: blue'>return</span>(df)  
+}</pre></div>
+
+
+<div class='section border margin padding'>
+<pre>
+<span class='comment'># MAKE A BUNCH OF DUMMY VARIABLES</span>
+df_dummy = data.frame(df$y, df$x1, df$x2)
+for (i in 1:n) {
+  D = c(rep(0, times = (i-1)*2), rep(1, times = 2), rep(0, times = (n-i)*2))
+  if (i > 1){
+    df_dummy = data.frame(df_dummy, D)
+  }
+}
+colnames (df_dummy)[1] = "y"
+colnames (df_dummy)[2] = "x1"
+colnames (df_dummy)[3] = "x2"
+
+<span class='comment'># OLS WITH n-1 DUMMY VARIABLES</span>
+model = lm(y ~ ., data = df_dummy)
+summary(model)</pre></div>
+
+
+
+<div class='section border margin padding'>
+<pre>
+<span class='comment'># OLS WITH ENTITY-DEMEANED REGRESSORS</span>
+df_demeaned = data.frame(df$y, df$x1, df$x2)
+colnames (df_demeaned)[1] = "y"
+colnames (df_demeaned)[2] = "x1"
+colnames (df_demeaned)[3] = "x2"
+y_avg = 0
+x1_avg = 0
+x2_avg = 0
+for (i in 1:N) {
+  
+  y_avg = y_avg + 0.5 * df_demeaned$y[i]
+  x1_avg = x1_avg + 0.5 * df_demeaned$x1[i]
+  x2_avg = x2_avg + 0.5 * df_demeaned$x2[i]
+  
+  if (i%%2 == 0) { <span class='comment'># EVERY 2ND</span>
+    print(i)
+    
+    df_demeaned$y[i-0] = df_demeaned$y[i-0] - y_avg
+    df_demeaned$y[i-1] = df_demeaned$y[i-1] - y_avg
+    
+    df_demeaned$x1[i-0] = df_demeaned$x1[i-0] - x1_avg
+    df_demeaned$x1[i-1] = df_demeaned$x1[i-1] - x1_avg
+    
+    df_demeaned$x2[i-0] = df_demeaned$x2[i-0] - x2_avg
+    df_demeaned$x2[i-1] = df_demeaned$x2[i-1] - x2_avg
+    
+    y_avg = 0
+    x1_avg = 0
+    x2_avg = 0
+    
+  }
+}
+model_dm = lm(y ~ x1 + x2 - 1, data = df_demeaned)
+summary(model_dm)</pre>
+

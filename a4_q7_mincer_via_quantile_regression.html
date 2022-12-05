@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="./includes/a.css">
+  <link rel="icon" href="./includes/a.png"> 
+  
+  <script src='./includes/r_box.js'></script>
+  <script src='./includes/r_matrix.js'></script>
+  
+  <!-- the wonderful katex ! -->
+  <link rel="stylesheet" href="./includes/katex/katex.min.css">
+  <script src="./includes/katex/katex.min.js"></script>
+  <script src="./includes/a.js"></script>
+
+  <title> A4 Q7 &middot; </title>
+
+</head>
+
+
+
+<div class='section border margin padding'>
+
+  <h4> A4 Q7 </h4>
+
+  <p> Mr Mincer's Magnificent Model </p>
+  <p><span class='math'> \ln{y} = \beta_0 + \beta_1 s + \beta_2 x + \beta_3 x^2 + e </span></p>
+
+</div>
+
+<div class='section border margin padding'>
+<h4> CLEANING THE DATA </h4>
+<p> i did this part in excel because vba typing is strict and i wanted to avoid dynamic typing. excel worksheet functions are like this too but vba (any office application hit <span class='inline-code'>alt+f11</span> in windows) doesn't let you get away with anything. </p>
+
+<table class='mytables'>
+ <tr>
+  <td>year</td>
+  <td>count</td>
+  <td>is_empty</td>
+  <td>is_zero</td>
+  <td>is_dropped</td>
+  <td>count[y > 0]</td>
+  <td>pct_included</td>
+ </tr>
+ <tr>
+  <td>1996</td>
+  <td>2770</td>
+  <td>51</td>
+  <td>26</td>
+  <td>77</td>
+  <td>2693</td>
+  <td>0.9722</td>
+ </tr>
+ <tr>
+  <td>1997</td>
+  <td>3383</td>
+  <td>72</td>
+  <td>28</td>
+  <td>100</td>
+  <td>3283</td>
+  <td>0.9704</td>
+ </tr>
+ <tr>
+  <td>1998</td>
+  <td>3482</td>
+  <td>75</td>
+  <td>28</td>
+  <td>103</td>
+  <td>3379</td>
+  <td>0.9704</td>
+ </tr>
+ <tr>
+  <td>1999</td>
+  <td>3861</td>
+  <td>110</td>
+  <td>52</td>
+  <td>162</td>
+  <td>3699</td>
+  <td>0.958</td>
+ </tr>
+ <tr>
+  <td>2000</td>
+  <td>4762</td>
+  <td>118</td>
+  <td>81</td>
+  <td>199</td>
+  <td>4563</td>
+  <td>0.9582</td>
+ </tr>
+ <tr>
+  <td>2001</td>
+  <td>1694</td>
+  <td>54</td>
+  <td>63</td>
+  <td>117</td>
+  <td>1577</td>
+  <td>0.9309</td>
+ </tr>
+ <tr>
+  <td>2002</td>
+  <td>4689</td>
+  <td>129</td>
+  <td>56</td>
+  <td>185</td>
+  <td>4504</td>
+  <td>0.9605</td>
+ </tr>
+ <tr>
+  <td>2003</td>
+  <td>6205</td>
+  <td>141</td>
+  <td>82</td>
+  <td>223</td>
+  <td>5982</td>
+  <td>0.964</td>
+ </tr>
+ <tr>
+  <td>2004</td>
+  <td>5359</td>
+  <td>130</td>
+  <td>66</td>
+  <td>196</td>
+  <td>5163</td>
+  <td>0.9634</td>
+ </tr>
+ <tr>
+  <td>2005</td>
+  <td>5110</td>
+  <td>138</td>
+  <td>48</td>
+  <td>186</td>
+  <td>4924</td>
+  <td>0.9636</td>
+ </tr>
+ 
+ <tr>
+  <th>totals</th>
+  <th>41315</th>
+  <th>1018</th>
+  <th>530</th>
+  <th>1548</th>
+  <th>39767</th>
+  <th>0.9625</th>
+ </tr>
+</table>
+
+</div>
+
+<div class='section border margin padding'>
+
+  <h4> A4 Q7 : DESCRIPTIVE STATS </h4>
+  
+<pre>
+# THE CLEANED VERSION WITH 39767 OBS
+import delimited "C:\Xampp\htdocs\_852_a4\data\incomes_xx.csv"
+
+<!--
+rename income y
+
+summarize income year
+
+table year
+table year, c(mean y sd y)
+table year, c(count y mean y sd y)
+
+table (year) (educ)  # rows : year; cols : educ
+
+table (year) (educ), contents(freq) # version 13
+
+table (year), contents(mean y sd y median y)  # more useful
+-->
+
+# the percentiles
+table (year), contents(p10 y p25 y p50 y p75 y p90 y)
+table (year), contents(p1 y p25 y p50 y p75 y p99 y)
+</pre>
+
+<table class='mytables'>
+ <tr>
+  <td>year</td>
+  <td>count</td>
+  <td>min</td>
+  <td>max</td>
+  <td>mean</td>
+  <td>sd</td>
+  <td>p01</td>
+  <td>p10</td>
+  <td>p25</td>
+  <td>p50</td>
+  <td>p75</td>
+  <td>p90</td>
+  <td>p99</td>
+ </tr>
+ <tr>
+  <td>1996</td>
+  <td>2693</td>
+  <td>0.0552</td>
+  <td>59.3929</td>
+  <td>7.7094</td>
+  <td>5.1013</td>
+  <td>0.468</td>
+  <td>2.9631</td>
+  <td>4.4284</td>
+  <td>6.5971</td>
+  <td>9.7893</td>
+  <td>13.4965</td>
+  <td>24.7554</td>
+ </tr>
+ <tr>
+  <td>1997</td>
+  <td>3283</td>
+  <td>0.0316</td>
+  <td>85.6901</td>
+  <td>7.9794</td>
+  <td>5.8074</td>
+  <td>0.5752</td>
+  <td>3.0576</td>
+  <td>4.5592</td>
+  <td>6.7457</td>
+  <td>9.989</td>
+  <td>13.9459</td>
+  <td>26.3746</td>
+ </tr>
+ <tr>
+  <td>1998</td>
+  <td>3379</td>
+  <td>0.0219</td>
+  <td>86.274</td>
+  <td>8.1775</td>
+  <td>5.8527</td>
+  <td>0.3335</td>
+  <td>3.0106</td>
+  <td>4.5473</td>
+  <td>6.9427</td>
+  <td>10.3004</td>
+  <td>14.531</td>
+  <td>27.4807</td>
+ </tr>
+ <tr>
+  <td>1999</td>
+  <td>3699</td>
+  <td>0.0018</td>
+  <td>112.2614</td>
+  <td>8.4929</td>
+  <td>6.2798</td>
+  <td>0.3987</td>
+  <td>3.0273</td>
+  <td>4.7509</td>
+  <td>7.1391</td>
+  <td>10.6794</td>
+  <td>15.4203</td>
+  <td>29.9255</td>
+ </tr>
+ <tr>
+  <td>2000</td>
+  <td>4563</td>
+  <td>0.0098</td>
+  <td>110.9123</td>
+  <td>9.1733</td>
+  <td>6.5326</td>
+  <td>0.5926</td>
+  <td>3.4743</td>
+  <td>5.2771</td>
+  <td>7.7369</td>
+  <td>11.5836</td>
+  <td>15.9215</td>
+  <td>31.5431</td>
+ </tr>
+ <tr>
+  <td>2001</td>
+  <td>1577</td>
+  <td>0.0157</td>
+  <td>88.156</td>
+  <td>8.8658</td>
+  <td>5.7245</td>
+  <td>0.3631</td>
+  <td>3.4404</td>
+  <td>5.2687</td>
+  <td>7.6228</td>
+  <td>11.2132</td>
+  <td>15.9208</td>
+  <td>27.5911</td>
+ </tr>
+ <tr>
+  <td>2002</td>
+  <td>4504</td>
+  <td>0.022</td>
+  <td>92.0708</td>
+  <td>10.9456</td>
+  <td>7.6485</td>
+  <td>0.8425</td>
+  <td>4.4626</td>
+  <td>6.2446</td>
+  <td>9.0813</td>
+  <td>13.3674</td>
+  <td>19.5299</td>
+  <td>38.6352</td>
+ </tr>
+ <tr>
+  <td>2003</td>
+  <td>5982</td>
+  <td>0.0356</td>
+  <td>101.5879</td>
+  <td>11.1547</td>
+  <td>7.6485</td>
+  <td>0.658</td>
+  <td>4.6172</td>
+  <td>6.502</td>
+  <td>9.2834</td>
+  <td>13.7731</td>
+  <td>19.8116</td>
+  <td>39.829</td>
+ </tr>
+ <tr>
+  <td>2004</td>
+  <td>5163</td>
+  <td>0.0124</td>
+  <td>97.3445</td>
+  <td>11.6219</td>
+  <td>7.73</td>
+  <td>0.6505</td>
+  <td>4.8918</td>
+  <td>6.8798</td>
+  <td>9.8071</td>
+  <td>14.3777</td>
+  <td>20.4855</td>
+  <td>40.9677</td>
+ </tr>
+ <tr>
+  <td>2005</td>
+  <td>4924</td>
+  <td>0.0299</td>
+  <td>123.5685</td>
+  <td>12.1778</td>
+  <td>7.7912</td>
+  <td>0.8837</td>
+  <td>5.225</td>
+  <td>7.1988</td>
+  <td>10.3801</td>
+  <td>15.2561</td>
+  <td>21.4382</td>
+  <td>38.484</td>
+ </tr>
+ <tr>
+  <td>summary</td>
+  <td>39767</td>
+  <td>0.0018</td>
+  <td>123.5685</td>
+  <td>x</td>
+  <td>x</td>
+  <td>x</td>
+  <td>x</td>
+  <td>x</td>
+  <td>x</td>
+  <td>x</td>
+  <td>x</td>
+  <td>x</td>
+ </tr>
+</table>
+
+<p> the maxes are a ways off, even from p99. the outliers. they will make ols life difficult. </p>
+
+</div>
+
+</div>
+
+<!-- opening L0 -->
+<div class='section border margin padding'>
+
+  <h4> A4 Q7 : QUANTILE REGRESSION </h4>
+
+</div>
+
+<div class='section border margin padding'><pre>
+rm(list = ls())   # CLEAR VARIABLES
+dev.off()         # REMOVE GRAPHICS
+
+library(AER)
+library(quantreg)
+
+df = read.csv("C:\\Xampp\\htdocs\\_852_a4\\data\\incomes_xx.csv");
+
+<span class='comment'># STIMES IS BETTER TO HARDCODE</span>
+years = c(1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005)
+quantiles = c(0.1, 0.25, 0.5, 0.75, 0.9)
+
+<span class='comment'># 10 YEARS x (OLS + 5 QUANTILES) x 4 DATA POINTS + 10 SPOTS FOR DATES = 250 SPACES</span>
+arr = rep(0, times = 250)
+count = 0
+
+# THE WORK
+for (year in years) {
+
+  count = count + 1
+  arr[count] = year
+  
+  df_year = df[df$year == year, ]
+  
+  model_ols = lm(y ~ educ + exp + exp_sq, data = df_year)
+  summary_ols = summary(model_ols)
+  
+  <span class='comment'># EDUCATION</span>
+  count = count + 1
+  arr[count] = summary_ols$coefficients[2] # b
+  count = count + 1
+  arr[count] = summary_ols$coefficients[6] # se
+  
+  <span class='comment'># EXPERIENCE</span>
+  count = count + 1
+  arr[count] = summary_ols$coefficients[3] # b
+  count = count + 1
+  arr[count] = summary_ols$coefficients[7] # se
+  
+  for (quantile in quantiles) {
+    
+    model_q = rq(y ~ educ + exp + exp_sq, tau=quantile, data = df_year)
+    summary_q = summary(model_q)
+    
+    <span class='comment'># EDUCATION</span>
+    count = count + 1
+    arr[count] = summary_q$coefficients[2] # b
+    count = count + 1
+    arr[count] = summary_q$coefficients[6] # se
+    
+    <span class='comment'># EXPERIENCE</span>
+    count = count + 1
+    arr[count] = summary_q$coefficients[3] # b
+    count = count + 1
+    arr[count] = summary_q$coefficients[7] # se
+    
+  }
+}</pre></div>
+
+<div class='section border margin padding'><pre>
+matrix = matrix(arr, nrow=25)
+
+df_output = as.data.frame(t(matrix))
+
+colnames (df_output) = c("year",
+                         "b_educ_ols", "se_educ_ols", "b_exp_ols", "se_exp_ols",
+                         "b_educ_q1", "se_educ_q1", "b_exp_q1", "se_exp_q1",
+                         "b_educ_q25", "se_educ_q25", "b_exp_q25", "se_exp_q25",
+                         "b_educ_q50", "se_educ_q50", "b_exp_q50", "se_exp_q50",
+                         "b_educ_q75", "se_educ_q75", "b_exp_q75", "se_exp_q75",
+                         "b_educ_q90", "se_educ_q90", "b_exp_q90", "se_exp_q90")
+
+write.table(df_output,
+            file="C:\\Users\\Dextercat\\Desktop\\q_reg.csv",
+            sep=",",
+            row.names=FALSE
+)
+</pre></div>
+
+<table class='mytables margin' id='q_reg_results'>
+
+ <tr>
+  <th>year</th>
+  <th>b_educ_ols</th>
+  <th>se_educ_ols</th>
+  <th>b_educ_q1</th>
+  <th>se_educ_q1</th>
+  <th>b_educ_q25</th>
+  <th>se_educ_q25</th>
+  <th>b_educ_q50</th>
+  <th>se_educ_q50</th>
+  <th>b_educ_q75</th>
+  <th>se_educ_q75</th>
+  <th>b_educ_q90</th>
+  <th>se_educ_q90</th>
+ </tr>
+ <tr>
+  <td>1996</td>
+  <td>0.56816</td>
+  <td>0.02722</td>
+  <td>0.21056</td>
+  <td>0.03112</td>
+  <td>0.33501</td>
+  <td>0.02274</td>
+  <td>0.49296</td>
+  <td>0.02096</td>
+  <td>0.67912</td>
+  <td>0.0294</td>
+  <td>0.9191</td>
+  <td>0.04516</td>
+ </tr>
+ <tr>
+  <td>1997</td>
+  <td>0.61643</td>
+  <td>0.02836</td>
+  <td>0.25058</td>
+  <td>0.0191</td>
+  <td>0.35243</td>
+  <td>0.02056</td>
+  <td>0.50792</td>
+  <td>0.01931</td>
+  <td>0.70156</td>
+  <td>0.03002</td>
+  <td>0.95188</td>
+  <td>0.02918</td>
+ </tr>
+ <tr>
+  <td>1998</td>
+  <td>0.648</td>
+  <td>0.02844</td>
+  <td>0.19749</td>
+  <td>0.01775</td>
+  <td>0.32889</td>
+  <td>0.01861</td>
+  <td>0.53303</td>
+  <td>0.0157</td>
+  <td>0.7511</td>
+  <td>0.02642</td>
+  <td>0.99839</td>
+  <td>0.03816</td>
+ </tr>
+ <tr>
+  <td>1999</td>
+  <td>0.643</td>
+  <td>0.02976</td>
+  <td>0.23186</td>
+  <td>0.02095</td>
+  <td>0.34494</td>
+  <td>0.01793</td>
+  <td>0.54415</td>
+  <td>0.02095</td>
+  <td>0.78772</td>
+  <td>0.02979</td>
+  <td>0.96825</td>
+  <td>0.04816</td>
+ </tr>
+ <tr>
+  <td>2000</td>
+  <td>0.71772</td>
+  <td>0.02747</td>
+  <td>0.29279</td>
+  <td>0.01936</td>
+  <td>0.38827</td>
+  <td>0.01999</td>
+  <td>0.55161</td>
+  <td>0.01889</td>
+  <td>0.80549</td>
+  <td>0.02086</td>
+  <td>1.09606</td>
+  <td>0.03564</td>
+ </tr>
+ <tr>
+  <td>2001</td>
+  <td>0.68282</td>
+  <td>0.03819</td>
+  <td>0.24404</td>
+  <td>0.03212</td>
+  <td>0.39497</td>
+  <td>0.02387</td>
+  <td>0.57483</td>
+  <td>0.02961</td>
+  <td>0.78049</td>
+  <td>0.03681</td>
+  <td>1.03777</td>
+  <td>0.07581</td>
+ </tr>
+ <tr>
+  <td>2002</td>
+  <td>0.78963</td>
+  <td>0.03231</td>
+  <td>0.27246</td>
+  <td>0.024</td>
+  <td>0.39248</td>
+  <td>0.01809</td>
+  <td>0.63659</td>
+  <td>0.0225</td>
+  <td>0.95515</td>
+  <td>0.03075</td>
+  <td>1.30146</td>
+  <td>0.06504</td>
+ </tr>
+ <tr>
+  <td>2003</td>
+  <td>0.82845</td>
+  <td>0.02823</td>
+  <td>0.30799</td>
+  <td>0.02094</td>
+  <td>0.42334</td>
+  <td>0.01525</td>
+  <td>0.68576</td>
+  <td>0.01653</td>
+  <td>0.96257</td>
+  <td>0.02731</td>
+  <td>1.24828</td>
+  <td>0.05317</td>
+ </tr>
+ <tr>
+  <td>2004</td>
+  <td>0.86126</td>
+  <td>0.03054</td>
+  <td>0.331</td>
+  <td>0.0235</td>
+  <td>0.44684</td>
+  <td>0.01604</td>
+  <td>0.66953</td>
+  <td>0.01935</td>
+  <td>0.98935</td>
+  <td>0.02039</td>
+  <td>1.33307</td>
+  <td>0.0408</td>
+ </tr>
+ <tr>
+  <td>2005</td>
+  <td>0.89887</td>
+  <td>0.03187</td>
+  <td>0.24682</td>
+  <td>0.02369</td>
+  <td>0.45451</td>
+  <td>0.01468</td>
+  <td>0.72152</td>
+  <td>0.01657</td>
+  <td>1.06316</td>
+  <td>0.02902</td>
+  <td>1.429</td>
+  <td>0.04972</td>
+ </tr>
+
+ 
+ <tr><td colspan=99></td></tr>
+
+ <tr>
+  <th>year</th>
+  <th>b_exp_ols</th>
+  <th>se_exp_ols</th>
+  <th>b_exp_q1</th>
+  <th>se_exp_q1</th>
+  <th>b_exp_q25</th>
+  <th>se_exp_q25</th>
+  <th>b_exp_q50</th>
+  <th>se_exp_q50</th>
+  <th>b_exp_q75</th>
+  <th>se_exp_q75</th>
+  <th>b_exp_q90</th>
+  <th>se_exp_q90</th>
+ </tr>
+ <tr>
+  <td>1996</td>
+  <td>0.44805</td>
+  <td>0.03216</td>
+  <td>0.25659</td>
+  <td>0.03615</td>
+  <td>0.30023</td>
+  <td>0.02232</td>
+  <td>0.3983</td>
+  <td>0.01521</td>
+  <td>0.59975</td>
+  <td>0.02442</td>
+  <td>0.75152</td>
+  <td>0.0635</td>
+ </tr>
+ <tr>
+  <td>1997</td>
+  <td>0.46598</td>
+  <td>0.03366</td>
+  <td>0.23471</td>
+  <td>0.02658</td>
+  <td>0.29331</td>
+  <td>0.02159</td>
+  <td>0.41623</td>
+  <td>0.01938</td>
+  <td>0.5534</td>
+  <td>0.02752</td>
+  <td>0.77004</td>
+  <td>0.0426</td>
+ </tr>
+ <tr>
+  <td>1998</td>
+  <td>0.47731</td>
+  <td>0.0326</td>
+  <td>0.24091</td>
+  <td>0.03014</td>
+  <td>0.2924</td>
+  <td>0.01895</td>
+  <td>0.42661</td>
+  <td>0.01981</td>
+  <td>0.59097</td>
+  <td>0.02571</td>
+  <td>0.79954</td>
+  <td>0.0464</td>
+ </tr>
+ <tr>
+  <td>1999</td>
+  <td>0.4919</td>
+  <td>0.03428</td>
+  <td>0.25334</td>
+  <td>0.02593</td>
+  <td>0.28885</td>
+  <td>0.01732</td>
+  <td>0.37344</td>
+  <td>0.0198</td>
+  <td>0.60793</td>
+  <td>0.03133</td>
+  <td>0.78782</td>
+  <td>0.04316</td>
+ </tr>
+ <tr>
+  <td>2000</td>
+  <td>0.54161</td>
+  <td>0.0323</td>
+  <td>0.26911</td>
+  <td>0.01958</td>
+  <td>0.29794</td>
+  <td>0.02015</td>
+  <td>0.43495</td>
+  <td>0.0167</td>
+  <td>0.62425</td>
+  <td>0.02085</td>
+  <td>0.88814</td>
+  <td>0.04357</td>
+ </tr>
+ <tr>
+  <td>2001</td>
+  <td>0.52262</td>
+  <td>0.04643</td>
+  <td>0.36221</td>
+  <td>0.0307</td>
+  <td>0.42277</td>
+  <td>0.05153</td>
+  <td>0.43841</td>
+  <td>0.03298</td>
+  <td>0.62438</td>
+  <td>0.04326</td>
+  <td>0.75779</td>
+  <td>0.08384</td>
+ </tr>
+ <tr>
+  <td>2002</td>
+  <td>0.56376</td>
+  <td>0.03887</td>
+  <td>0.26445</td>
+  <td>0.03558</td>
+  <td>0.28787</td>
+  <td>0.02147</td>
+  <td>0.45069</td>
+  <td>0.02371</td>
+  <td>0.71093</td>
+  <td>0.03645</td>
+  <td>0.966</td>
+  <td>0.04455</td>
+ </tr>
+ <tr>
+  <td>2003</td>
+  <td>0.5929</td>
+  <td>0.03316</td>
+  <td>0.34235</td>
+  <td>0.03749</td>
+  <td>0.34552</td>
+  <td>0.01812</td>
+  <td>0.47173</td>
+  <td>0.01984</td>
+  <td>0.71572</td>
+  <td>0.01985</td>
+  <td>0.99631</td>
+  <td>0.05091</td>
+ </tr>
+ <tr>
+  <td>2004</td>
+  <td>0.59797</td>
+  <td>0.03628</td>
+  <td>0.3095</td>
+  <td>0.03229</td>
+  <td>0.33926</td>
+  <td>0.01731</td>
+  <td>0.50894</td>
+  <td>0.02369</td>
+  <td>0.72253</td>
+  <td>0.03245</td>
+  <td>1.00758</td>
+  <td>0.04049</td>
+ </tr>
+ <tr>
+  <td>2005</td>
+  <td>0.69572</td>
+  <td>0.03802</td>
+  <td>0.41771</td>
+  <td>0.03425</td>
+  <td>0.38581</td>
+  <td>0.02261</td>
+  <td>0.53464</td>
+  <td>0.02195</td>
+  <td>0.78173</td>
+  <td>0.03304</td>
+  <td>1.07289</td>
+  <td>0.04828</td>
+ </tr>
+</table>
+
+</div> <!-- L0 -->
+
+<table class='mytables box margin'>
+<tr><th>coefficient of educ against year</th></tr>
+<tr><td><div class='box margin' id='container_educ'></div></td></tr>
+</table>
+<table class='mytables box margin'>
+<tr><th>coefficient of exp against year</th></tr>
+<tr><td><div class='box margin' id='container_exp'></div></td></tr>
+</table>
+
+<div class='section border margin padding'>
+  <h4> A BRIEF DESCRIPTION OF THE PICTURES </h4>
+  <p> in the pictures above, green is p90, and purple is p1. ols is blue </p>
+  <p> the highlighted region around the lines are 2*SE. the function <span class='inline-code'>summary()</span> in R uses homoskedasticity-only standard errors. that probably is not right </p>
+</div>
+
+<div class='section border margin padding'>
+
+  <h4> THE MEAN RETURNS TO EDUCATION COMPARED TO THE QUANTILES </h4>
+  
+  <p> i. the blue line is OLS. that is the mean return to education. over time, it remained positive, and appears, upon visual inspection, to have become more positive between the years of 1996 and 2005 </p>
+  <p> the returns to education for each of the quantiles behaved similarly. but the lower quantiles did more poorly. this makes me suspect many things. </p>
+
+  <p> ii. the returns to education, in the context of this particular model, do differ between quantiles. i would not object to the application of the language 'differ greatly' in this case. the green line is p90. but that dip in 2001 makes me suspicious. and i do not know what kind of income we are discussing. i would like to see a breakdown of incomes by origin.  </p>
+  
+  <p> iii. yes. there were. the reported returns to education are higher in higher quantiles. i was curious about the skewness of the incomes so i used a function i wrote for another assignment to examine it, because the histograms are hard to make sense of when they're this way. </p>
+
+</div>
+
+<div class='section border margin padding'>
+<pre>
+get_skewness = function(arr_) {
+  
+  n = length(arr_)
+  mu = mean(arr_)
+  sigma2 = var(arr_)*((n-1)/n)
+  sigma3 = sigma2^(3/2) 
+  
+  mu3 = 0
+  for (i in 1:length(arr_)) { #dangerous
+    mu3 = mu3 + (arr_[i] - mu)^3
+  }
+  
+  mu3 = mu3 / n  <span class='comment'># mu3 = E[(x-mu)^3] is the 3rd moment of x</span>
+  skewness_ = mu3 / sigma3
+  return(skewness_)
+}</pre></div>
+
+<script>
+
+let arr = [
+ {
+  "year":"1996",
+  "b_educ_ols":"0.56816",
+  "se_educ_ols":"0.02722",
+  "b_educ_q1":"0.21056",
+  "se_educ_q1":"0.03112",
+  "b_educ_q25":"0.33501",
+  "se_educ_q25":"0.02274",
+  "b_educ_q50":"0.49296",
+  "se_educ_q50":"0.02096",
+  "b_educ_q75":"0.67912",
+  "se_educ_q75":"0.0294",
+  "b_educ_q90":"0.9191",
+  "se_educ_q90":"0.04516",
+  "b_exp_ols":"0.44805",
+  "se_exp_ols":"0.03216",
+  "b_exp_q1":"0.25659",
+  "se_exp_q1":"0.03615",
+  "b_exp_q25":"0.30023",
+  "se_exp_q25":"0.02232",
+  "b_exp_q50":"0.3983",
+  "se_exp_q50":"0.01521",
+  "b_exp_q75":"0.59975",
+  "se_exp_q75":"0.02442",
+  "b_exp_q90":"0.75152",
+  "se_exp_q90":"0.0635"
+ },
+ {
+  "year":"1997",
+  "b_educ_ols":"0.61643",
+  "se_educ_ols":"0.02836",
+  "b_educ_q1":"0.25058",
+  "se_educ_q1":"0.0191",
+  "b_educ_q25":"0.35243",
+  "se_educ_q25":"0.02056",
+  "b_educ_q50":"0.50792",
+  "se_educ_q50":"0.01931",
+  "b_educ_q75":"0.70156",
+  "se_educ_q75":"0.03002",
+  "b_educ_q90":"0.95188",
+  "se_educ_q90":"0.02918",
+  "b_exp_ols":"0.46598",
+  "se_exp_ols":"0.03366",
+  "b_exp_q1":"0.23471",
+  "se_exp_q1":"0.02658",
+  "b_exp_q25":"0.29331",
+  "se_exp_q25":"0.02159",
+  "b_exp_q50":"0.41623",
+  "se_exp_q50":"0.01938",
+  "b_exp_q75":"0.5534",
+  "se_exp_q75":"0.02752",
+  "b_exp_q90":"0.77004",
+  "se_exp_q90":"0.0426"
+ },
+ {
+  "year":"1998",
+  "b_educ_ols":"0.648",
+  "se_educ_ols":"0.02844",
+  "b_educ_q1":"0.19749",
+  "se_educ_q1":"0.01775",
+  "b_educ_q25":"0.32889",
+  "se_educ_q25":"0.01861",
+  "b_educ_q50":"0.53303",
+  "se_educ_q50":"0.0157",
+  "b_educ_q75":"0.7511",
+  "se_educ_q75":"0.02642",
+  "b_educ_q90":"0.99839",
+  "se_educ_q90":"0.03816",
+  "b_exp_ols":"0.47731",
+  "se_exp_ols":"0.0326",
+  "b_exp_q1":"0.24091",
+  "se_exp_q1":"0.03014",
+  "b_exp_q25":"0.2924",
+  "se_exp_q25":"0.01895",
+  "b_exp_q50":"0.42661",
+  "se_exp_q50":"0.01981",
+  "b_exp_q75":"0.59097",
+  "se_exp_q75":"0.02571",
+  "b_exp_q90":"0.79954",
+  "se_exp_q90":"0.0464"
+ },
+ {
+  "year":"1999",
+  "b_educ_ols":"0.643",
+  "se_educ_ols":"0.02976",
+  "b_educ_q1":"0.23186",
+  "se_educ_q1":"0.02095",
+  "b_educ_q25":"0.34494",
+  "se_educ_q25":"0.01793",
+  "b_educ_q50":"0.54415",
+  "se_educ_q50":"0.02095",
+  "b_educ_q75":"0.78772",
+  "se_educ_q75":"0.02979",
+  "b_educ_q90":"0.96825",
+  "se_educ_q90":"0.04816",
+  "b_exp_ols":"0.4919",
+  "se_exp_ols":"0.03428",
+  "b_exp_q1":"0.25334",
+  "se_exp_q1":"0.02593",
+  "b_exp_q25":"0.28885",
+  "se_exp_q25":"0.01732",
+  "b_exp_q50":"0.37344",
+  "se_exp_q50":"0.0198",
+  "b_exp_q75":"0.60793",
+  "se_exp_q75":"0.03133",
+  "b_exp_q90":"0.78782",
+  "se_exp_q90":"0.04316"
+ },
+ {
+  "year":"2000",
+  "b_educ_ols":"0.71772",
+  "se_educ_ols":"0.02747",
+  "b_educ_q1":"0.29279",
+  "se_educ_q1":"0.01936",
+  "b_educ_q25":"0.38827",
+  "se_educ_q25":"0.01999",
+  "b_educ_q50":"0.55161",
+  "se_educ_q50":"0.01889",
+  "b_educ_q75":"0.80549",
+  "se_educ_q75":"0.02086",
+  "b_educ_q90":"1.09606",
+  "se_educ_q90":"0.03564",
+  "b_exp_ols":"0.54161",
+  "se_exp_ols":"0.0323",
+  "b_exp_q1":"0.26911",
+  "se_exp_q1":"0.01958",
+  "b_exp_q25":"0.29794",
+  "se_exp_q25":"0.02015",
+  "b_exp_q50":"0.43495",
+  "se_exp_q50":"0.0167",
+  "b_exp_q75":"0.62425",
+  "se_exp_q75":"0.02085",
+  "b_exp_q90":"0.88814",
+  "se_exp_q90":"0.04357"
+ },
+ {
+  "year":"2001",
+  "b_educ_ols":"0.68282",
+  "se_educ_ols":"0.03819",
+  "b_educ_q1":"0.24404",
+  "se_educ_q1":"0.03212",
+  "b_educ_q25":"0.39497",
+  "se_educ_q25":"0.02387",
+  "b_educ_q50":"0.57483",
+  "se_educ_q50":"0.02961",
+  "b_educ_q75":"0.78049",
+  "se_educ_q75":"0.03681",
+  "b_educ_q90":"1.03777",
+  "se_educ_q90":"0.07581",
+  "b_exp_ols":"0.52262",
+  "se_exp_ols":"0.04643",
+  "b_exp_q1":"0.36221",
+  "se_exp_q1":"0.0307",
+  "b_exp_q25":"0.42277",
+  "se_exp_q25":"0.05153",
+  "b_exp_q50":"0.43841",
+  "se_exp_q50":"0.03298",
+  "b_exp_q75":"0.62438",
+  "se_exp_q75":"0.04326",
+  "b_exp_q90":"0.75779",
+  "se_exp_q90":"0.08384"
+ },
+ {
+  "year":"2002",
+  "b_educ_ols":"0.78963",
+  "se_educ_ols":"0.03231",
+  "b_educ_q1":"0.27246",
+  "se_educ_q1":"0.024",
+  "b_educ_q25":"0.39248",
+  "se_educ_q25":"0.01809",
+  "b_educ_q50":"0.63659",
+  "se_educ_q50":"0.0225",
+  "b_educ_q75":"0.95515",
+  "se_educ_q75":"0.03075",
+  "b_educ_q90":"1.30146",
+  "se_educ_q90":"0.06504",
+  "b_exp_ols":"0.56376",
+  "se_exp_ols":"0.03887",
+  "b_exp_q1":"0.26445",
+  "se_exp_q1":"0.03558",
+  "b_exp_q25":"0.28787",
+  "se_exp_q25":"0.02147",
+  "b_exp_q50":"0.45069",
+  "se_exp_q50":"0.02371",
+  "b_exp_q75":"0.71093",
+  "se_exp_q75":"0.03645",
+  "b_exp_q90":"0.966",
+  "se_exp_q90":"0.04455"
+ },
+ {
+  "year":"2003",
+  "b_educ_ols":"0.82845",
+  "se_educ_ols":"0.02823",
+  "b_educ_q1":"0.30799",
+  "se_educ_q1":"0.02094",
+  "b_educ_q25":"0.42334",
+  "se_educ_q25":"0.01525",
+  "b_educ_q50":"0.68576",
+  "se_educ_q50":"0.01653",
+  "b_educ_q75":"0.96257",
+  "se_educ_q75":"0.02731",
+  "b_educ_q90":"1.24828",
+  "se_educ_q90":"0.05317",
+  "b_exp_ols":"0.5929",
+  "se_exp_ols":"0.03316",
+  "b_exp_q1":"0.34235",
+  "se_exp_q1":"0.03749",
+  "b_exp_q25":"0.34552",
+  "se_exp_q25":"0.01812",
+  "b_exp_q50":"0.47173",
+  "se_exp_q50":"0.01984",
+  "b_exp_q75":"0.71572",
+  "se_exp_q75":"0.01985",
+  "b_exp_q90":"0.99631",
+  "se_exp_q90":"0.05091"
+ },
+ {
+  "year":"2004",
+  "b_educ_ols":"0.86126",
+  "se_educ_ols":"0.03054",
+  "b_educ_q1":"0.331",
+  "se_educ_q1":"0.0235",
+  "b_educ_q25":"0.44684",
+  "se_educ_q25":"0.01604",
+  "b_educ_q50":"0.66953",
+  "se_educ_q50":"0.01935",
+  "b_educ_q75":"0.98935",
+  "se_educ_q75":"0.02039",
+  "b_educ_q90":"1.33307",
+  "se_educ_q90":"0.0408",
+  "b_exp_ols":"0.59797",
+  "se_exp_ols":"0.03628",
+  "b_exp_q1":"0.3095",
+  "se_exp_q1":"0.03229",
+  "b_exp_q25":"0.33926",
+  "se_exp_q25":"0.01731",
+  "b_exp_q50":"0.50894",
+  "se_exp_q50":"0.02369",
+  "b_exp_q75":"0.72253",
+  "se_exp_q75":"0.03245",
+  "b_exp_q90":"1.00758",
+  "se_exp_q90":"0.04049"
+ },
+ {
+  "year":"2005",
+  "b_educ_ols":"0.89887",
+  "se_educ_ols":"0.03187",
+  "b_educ_q1":"0.24682",
+  "se_educ_q1":"0.02369",
+  "b_educ_q25":"0.45451",
+  "se_educ_q25":"0.01468",
+  "b_educ_q50":"0.72152",
+  "se_educ_q50":"0.01657",
+  "b_educ_q75":"1.06316",
+  "se_educ_q75":"0.02902",
+  "b_educ_q90":"1.429",
+  "se_educ_q90":"0.04972",
+  "b_exp_ols":"0.69572",
+  "se_exp_ols":"0.03802",
+  "b_exp_q1":"0.41771",
+  "se_exp_q1":"0.03425",
+  "b_exp_q25":"0.38581",
+  "se_exp_q25":"0.02261",
+  "b_exp_q50":"0.53464",
+  "se_exp_q50":"0.02195",
+  "b_exp_q75":"0.78173",
+  "se_exp_q75":"0.03304",
+  "b_exp_q90":"1.07289",
+  "se_exp_q90":"0.04828"
+ }
+];
+
+</script>
+
+<script>
+
+window.addEventListener('load', function() {
+
+  // SETUP 
+  let box_educ = new Box();
+  let box_exp = new Box();
+  container_educ.appendChild(box_educ.RETURN_CONTAINER());
+  container_exp.appendChild(box_exp.RETURN_CONTAINER());
+  
+  // THIS IS THE NUMBER OF PIXELS
+  box_educ.RESIZE(600, 500);
+  box_exp.RESIZE(600, 500);
+  
+  // SET THE RANGE
+  box_educ.RANGE_X(1995.5, 2005.5);          
+  box_educ.RANGE_Y(0, 2);
+  box_exp.RANGE_X(1995.5, 2005.5);          
+  box_exp.RANGE_Y(0, 2);
+
+  // CLEAR THE CURRENT DRAWING
+  box_educ.CLEAR_CANVAS();
+  box_exp.CLEAR_CANVAS();
+  
+  // SHOW GRIDLINES 
+  box_educ.LINE_WIDTH(1);
+  box_educ.STROKE_STYLE('#ddd');
+  box_educ.SHOW_GRID_X();
+  box_educ.SHOW_GRID_Y();
+  
+  // SHOW GRIDLINES 
+  box_exp.LINE_WIDTH(1);
+  box_exp.STROKE_STYLE('#ddd');
+  box_exp.SHOW_GRID_X();
+  box_exp.SHOW_GRID_Y();
+
+  // DRAW THE AXES 
+  box_educ.LINE_WIDTH(2);
+  box_educ.STROKE_STYLE('#999');
+  box_educ.SHOW_AXES();
+  
+  // 58de
+  // 5c5e
+  // f7ae
+  // fa2e
+  // fc0e
+  // 5c5e
+  
+  DRAW_THE_GLOWING_LINE(box_educ,arr, 'educ_ols', '#58de', '#58d3');
+  DRAW_THE_GLOWING_LINE(box_educ, arr, 'educ_q1', '#c5ce', '#c5c3');
+  DRAW_THE_GLOWING_LINE(box_educ, arr, 'educ_q25', '#f7ae', '#f7a3');
+  DRAW_THE_GLOWING_LINE(box_educ, arr, 'educ_q50', '#fa2e', '#fa23');
+  DRAW_THE_GLOWING_LINE(box_educ, arr, 'educ_q75', '#fc0e', '#fc03');
+  DRAW_THE_GLOWING_LINE(box_educ, arr, 'educ_q90', '#5c5e', '#5c53');
+  
+  DRAW_THE_GLOWING_LINE(box_exp,arr, 'exp_ols', '#58de', '#58d3');
+  DRAW_THE_GLOWING_LINE(box_exp, arr, 'exp_q1', '#c5ce', '#c5c3');
+  DRAW_THE_GLOWING_LINE(box_exp, arr, 'exp_q25', '#f7ae', '#f7a3');
+  DRAW_THE_GLOWING_LINE(box_exp, arr, 'exp_q50', '#fa2e', '#fa23');
+  DRAW_THE_GLOWING_LINE(box_exp, arr, 'exp_q75', '#fc0e', '#fc03');
+  DRAW_THE_GLOWING_LINE(box_exp, arr, 'exp_q90', '#5c5e', '#5c53');
+  
+  // key = ols, q1, q25 etc.
+  function DRAW_THE_GLOWING_LINE(box, arr, key, DARK_COLOR, LIGHT_COLOR) {
+  
+    
+    for (let i = 0; i < arr.length; i++) {
+    
+      let year = parseFloat(arr[i].year);
+      let b_ols = parseFloat(arr[i]['b_' + key]);
+    
+      box.FILL_STYLE(DARK_COLOR);
+      box.RADIUS(2);
+      box.POINT({'x':year,'y':parseFloat(arr[i]['b_' + key])});
+      
+
+      box.LINE_WIDTH(2);
+
+      if (i > 0) {
+      
+        box.STROKE_STYLE(DARK_COLOR);
+        box.CONNECT_POINTS([
+          {'x':parseFloat(arr[i-1].year),'y':parseFloat(arr[i-1]['b_' + key])},
+          {'x':parseFloat(arr[i+0].year),'y':parseFloat(arr[i+0]['b_' + key])}
+        ]);
+        
+        box.STROKE_STYLE(LIGHT_COLOR);
+        box.FILL_STYLE(LIGHT_COLOR);
+        box.SHAPE([
+          {'x':parseFloat(arr[i-1].year),'y':parseFloat(arr[i-1]['b_' + key]) + 2 * parseFloat(arr[i-1]['se_' + key])},
+          {'x':parseFloat(arr[i+0].year),'y':parseFloat(arr[i+0]['b_' + key]) + 2 * parseFloat(arr[i+0]['se_' + key])},
+          {'x':parseFloat(arr[i+0].year),'y':parseFloat(arr[i+0]['b_' + key]) - 2 * parseFloat(arr[i+0]['se_' + key])},
+          {'x':parseFloat(arr[i-1].year),'y':parseFloat(arr[i-1]['b_' + key]) - 2 * parseFloat(arr[i-1]['se_' + key])},
+        ]);
+       
+      }
+
+    }
+  
+  };
+  
+  
+
+});
+
+</script>
