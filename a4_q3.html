@@ -17,7 +17,7 @@
   <script src="./includes/katex/katex.min.js"></script>
   <script src="./includes/a.js"></script>
 
-  <title> a4 q1 &middot; </title>
+  <title> A4 Q3 &middot; </title>
 
 </head>
 
@@ -25,7 +25,28 @@
 
 <div class='section border margin padding'>
 
+  <h4> A4 Q3 : INDIVIDUAL FE </h4>
+  
+  <h4> PART-A </h4>
+  
+  <p> if you have <span class='math'>y_{it} = \beta_1 x_{it} + \alpha_i + e_{it} </span></p>
 
-
+  <p> entity fixed effects is the same as having a billion dummy variables (one for each entity), and using a billion less 1 (to avoid perfect multicollinearity), AND entity-demeaned regression (in fact i wrote both of them (and more) for question 8). </p>
+  
+  <p> but if we focus on entity-demeaned, we get  </p>
+  <p> <span class='math'>y_{it} - \bar{y} = (\beta_1 x_{it} + \alpha_i + e_{it}) - \bar{y} </span></p>
+  <p> <span class='math'>y_{it} - \bar{y}_i = (\beta_1 x_{it} + \alpha_i + e_{it}) - (\beta_1 \bar{x}_i + \bar{\alpha}_i + \bar{e}_i ) </span></p>
+  <p> <span class='math'>y_{it} - \bar{y}_i = \beta_1 (x_{it}-\bar{x}_i) + (e_{it} - \bar{e}_i ) </span></p>
+  <p> and now all our problems are solved </p>
+  
+  <h4> PART-B </h4>
+  
+  <p> i. can an FE regression identify the effect of gender on someone's earnings ? probably not. gender and whatever else, hair color and things like that, they'll all get rolled up into <span class='math'>\alpha_i</span>, the time-invariant contributors to unobserved heterogeneity. or rather than say time-invariant, perhaps generally-invariant-over-the-relevant-time-span might be better, but who knows. </p>
+  
+  <p> ii. but the effect of a national unemployment rate on someone's income ? maybe, that depends on the program. if it stinks, then no. but if it <i>really</i> stinks, then yes. and if it's good, possibly, but no one will ever look. if it's a national program, what's tough is that the person's province and city etc etc get rolled into their alpha. but it's harder to say those things are generally-invariant-over-the-relevant-time-span. let's say a 2-period model, which we can work with more easily before the ugliness of autocorrelated errors, we might need something in the model to capture the time fixed effects. without that, the effect of the program might be obscured. </p>
+  
+  
+  
+  
 </div>
 
