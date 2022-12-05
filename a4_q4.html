@@ -17,7 +17,7 @@
   <script src="./includes/katex/katex.min.js"></script>
   <script src="./includes/a.js"></script>
 
-  <title> a4 q1 &middot; </title>
+  <title> A4 Q4 &middot; </title>
 
 </head>
 
@@ -25,6 +25,15 @@
 
 <div class='section border margin padding'>
 
+  <h4> A4 Q4 : WHEN TO USE INDIVIDUAL FE ? </h4>
+  
+  <p> i can't think of a spec test for this. but i might do the following : </p>
+  
+  <ul>
+   <li><p> do we have more than 1 observation for each entity / individual ? then we <i>could</i> use entity / individual FE </p>
+   <li><p> i would just use something like anova. each entity / individual is a category. and with the y being continuous, we could decompose var(y) to that within the groups and between groups via LIE </p>
+   <li><p> if the variance between groups is large, i would think FE is probably a decent starting point </p>
+  </ul>
 
 
 </div>
