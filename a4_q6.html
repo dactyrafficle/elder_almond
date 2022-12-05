@@ -22,59 +22,115 @@
 </head>
 
 
+<!-- opening L0 -->
+<div class='section border margin padding'>
+  <h4> A4 Q6   </h4>
+  <p><span class='math'> Y = a + b \cdot x + c \cdot t + d \cdot (x \cdot t) + e </span>
+</div>
 
+<!-- opening L0 -->
 <div class='section border margin padding'>
 
-  <h4> A4 Q6   </h4>
+<div class='box'>
+<table class='mytables margin'>
+ <tr>
+  <td>NJ<div><span class='math'>x</span></div></td>
+  <td>AFTER<div><span class='math'>t</span></div></td>
+  <td>desc</td>
+  <td>desc2</td>
+  <td>AVG<div><span class='math'>y|x,t</span></div></td>
+  <td>FD</td>
+  <td>DID</td>
+ </tr>
+ <tr>
+  <td>0</td>
+  <td>0</td>
+  <td>control, before</td>
+  <td><span class='math'>a</span></td>
+  <td>20.3</td>
+  <td>.</td>
+  <td>.</td>
+ </tr>
+ <tr>
+  <td>0</td>
+  <td>1</td>
+  <td>control, after</td>
+  <td><span class='math'>a+c</span></td>
+  <td>18.25384</td>
+  <td>-2.04615</td>
+  <td>.</td>
+ </tr>
+ <tr>
+  <td>1</td>
+  <td>0</td>
+  <td>treatment, before</td>
+  <td><span class='math'>a + b</span></td>
+  <td>17.30105</td>
+  <td>.</td>
+  <td>.</td>
+ </tr>
+ <tr>
+  <td>1</td>
+  <td>1</td>
+  <td>treatment, after</td>
+  <td><span class='math'>a + b + c + d </span></td>
+  <td>17.58362</td>
+  <td>0.28257</td>
+  <td><span class='blue'>2.32872</span></td>
+ </tr>
+</table>
 
-  <div class='box'>
-  <p><span class='math'> Y = a + b x + c t + d x t + u </span></p>
+<table class='mytables margin'>
+ <tr>
+  <td>x</td>
+  <td>x</td>
+  <td>0</td>
+  <td>1</td>
+  <td>x</td>
+ </tr>
+ <tr>
+  <td>x</td>
+  <td>desc</td>
+  <td>BEFORE</td>
+  <td>AFTER</td>
+  <td>diff</td>
+ </tr>
+ <tr>
+  <td>0</td>
+  <td>PENN</td>
+  <td>20.3</td>
+  <td>18.25384</td>
+  <td>-2.04615</td>
+ </tr>
+ <tr>
+  <td>1</td>
+  <td>NJ</td>
+  <td>17.30105</td>
+  <td>17.58362</td>
+  <td>0.28257</td>
+ </tr>
+ <tr>
+  <td>x</td>
+  <td>diff</td>
+  <td>-2.99894</td>
+  <td>-0.67021</td>
+  <td><span class='blue'>2.32872</span></td>
+ </tr>
+</table>
+</div>
   
-  <table class='mytables'>
-   <tr><td><span class='math'>x</span></td><td><span class='math'>t</span></td><td><span class='math'>y|x,t</td>
-   <tr><td>0</td><td>0</td><td><span class='math'>a</span></td><td><p>control, before</p></td></tr>
-   <tr><td>0</td><td>1</td><td><span class='math'>a + 0 + c + 0 </span></td><td><p>control, after</p></td></tr>
-   <tr><td>1</td><td>0</td><td><span class='math'>a + b + 0 + 0 </span></td><td><p>treatment, before</p></td></tr>
-   <tr><td>1</td><td>1</td><td><span class='math'>a + b + c + d </span></td><td><p>treatment, after</p></td></tr>
-  </table>
-  </div>
-  
-  <div class='box'>
+  <div class='box border margin padding'>
     <img src='./images/a4_q6_did.png' />
   </div>
 
- <div class='box'>
+</div> <!-- closing L0 -->
+
+<div class='section border margin padding'>
  
-  <pre>
-  
-  t=0 : feb/march 1992
-  t=1 : nov/dec 1992
-  
-  
-  a	20.3		17.301	20.3
-b	-2.999		17.584	18.254
-c	-2.046			
-d	2.329			
-
-just straight y on x + t + xt
-we get this
-
-
-what if i include BOTH state-fixed effects AND entity-fixed effects ?
-Table 18.1 is a saturated regression in the two dummy variables and can therefore be written as the
-regression equation
-p 651 hansen
-
-a demeaned gets us this
-a	1.0231		 (0.141300)	 1.023100 	 1.164400 
-b	-1.1644		 0.141200 	 (1.023100)	 (1.164300)
-c	-2.0462		 0.282500 	 (2.046200)	 (2.328700)
-d	2.3287				
-
-
-</pre>
-</div>
-
+  <h4> THE DATA </h4>
 
 </div>
+
+
+
 
