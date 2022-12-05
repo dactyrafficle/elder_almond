@@ -57,7 +57,7 @@
   <td>control, after</td>
   <td><span class='math'>a+c</span></td>
   <td>18.25384</td>
-  <td>-2.04615</td>
+  <td><span class='math'>c=-2.04615</span></td>
   <td>.</td>
  </tr>
  <tr>
@@ -75,12 +75,12 @@
   <td>treatment, after</td>
   <td><span class='math'>a + b + c + d </span></td>
   <td>17.58362</td>
-  <td>0.28257</td>
-  <td><span class='blue'>2.32872</span></td>
+  <td><span class='math'>c+d = 0.28257</span></td>
+  <td><span class='math'>d = 2.32872</span></td>
  </tr>
 </table>
 
-<table class='mytables margin'>
+<table class='mytables box margin'>
  <tr>
   <td>x</td>
   <td>x</td>
@@ -117,6 +117,30 @@
   <td><span class='blue'>2.32872</span></td>
  </tr>
 </table>
+
+<table class='mytables box margin'>
+ <tr>
+  <td>coefficients</td>
+  <td>estimate</td>
+ </tr>
+ <tr>
+  <td>a</td>
+  <td><span class='math' style='float: right;'>20.30000</span></td>
+ </tr>
+ <tr>
+  <td>b</td>
+  <td><span class='math' style='float: right;'>-2.99894</span></td>
+ </tr>
+ <tr>
+  <td>c</td>
+  <td><span class='math' style='float: right;'>-2.04615</span></td>
+ </tr>
+ <tr>
+  <td>d</td>
+  <td><span class='math' style='float: right;'>2.32872</span></td>
+ </tr>
+</table>
+
 </div>
   
   <div class='box border margin padding'>
@@ -126,10 +150,60 @@
 </div> <!-- closing L0 -->
 
 <div class='section border margin padding'>
+<img src='./images/a4_q6_did_nj.png' /></div>
+
+<div class='section border margin padding'>
  
   <h4> THE DATA </h4>
 
 </div>
+
+<div class='section border margin padding'><pre>
+df = read.csv("C:\\Xampp\\htdocs\\_852_a4\\data\\did_x.csv");
+
+y = df$fte
+x = df$nj
+t = df$after
+xt = df$nj_after
+
+model = lm(y ~ x + t + xt)
+coeftest(model, vcov = vcovHC, type = "HC1")</pre></div>
+  
+<div class='section border margin padding'>
+  <img src='./images/a4_q6_ols.png' />
+</div>
+  
+<div class='section border margin padding'><pre>
+<span class='comment'># CALCULATE THE DID ESTIMATOR BY HAND</span>
+
+vec_a = df[df$nj != 1, ][df[df$nj != 1, ]$after == 0, ]$fte
+a = mean(vec_a)
+
+vec_a_c = df[df$nj != 1, ][df[df$nj != 1, ]$after == 1, ]$fte
+a_c = mean(vec_a_c)
+
+vec_a_b = df[df$nj == 1, ][df[df$nj == 1, ]$after == 0, ]$fte
+a_b = mean(vec_a_b)
+
+vec_a_b_c_d = df[df$nj == 1, ][df[df$nj == 1, ]$after == 1, ]$fte
+a_b_c_d = mean(vec_a_b_c_d)
+
+<span class='comment'># THE COEFFICIENT ESTIMATES</span>
+c = a_c - a
+b = a_b - a
+c_d = a_b_c_d - a_b
+d = c_d - c
+
+<span class='comment'># SE ON t USING HC2 : RETURNS 1.797624</span>
+se_t = sqrt(var(vec_a) / length(vec_a) + var(vec_a_c) / length(vec_a_c))
+
+<span class='comment'># SE ON x USING HC2 : RETURNS 1.598189</span>
+se_x = sqrt(var(vec_a) / length(vec_a) + var(vec_a_b) / length(vec_a_b))
+
+<span class='comment'># SE ON xt USING HC2 : RETURNS 1.938568</span>
+se_xt = sqrt(var(vec_a) / length(vec_a) + var(vec_a_c) / length(vec_a_c) + var(vec_a_b) / length(vec_a_b) + var(vec_a_b_c_d) / length(vec_a_b_c_d))
+
+</pre></div>
 
 
 
