@@ -25,7 +25,109 @@
 
 <div class='section border margin padding'>
 
+<h4> A4 Q1 : COMPARING BOOTSTRAPS </h4>
 
+<p> for a quick look at how 2 different approaches vary, lets compare algo-A and algo-B from the notes </p>
+
+<p> both start out the same </p>
+<ul>
+ <li><p> we have a bunch of realizations of some random variable x, which constitutes our observed data </p>
+ <li><p> the random variable x has qualities. one of them interests us. that is the parameter of interest, <span class='math'>\theta</span></p>
+ <li><p> using the observed data, do a calculation <span class='math'>\hat{\theta} = s(x)</span>, which is our attempt to estimate the parameter <span class='math'>\theta</span></p>
+ <li><p> <span class='math'>\hat{f}(x)</span> is some function that returns a set of realizations, drawn from the initial sample (the observed data) </p>
+ <li><p> the new set of realizations, <span class='math'>x^*</span>, is a sample of our sample, and it is the same size as our sample </p>
+ <li><p> that is only possible if we insist that after drawing a realization <span class='math'>x_i</span>, that we put it back into the pot, so that it may be, possibly, chosen again (sampling with replacement)</p>
+ <li><p> we calculate the estimate of the parameter again, using the sample sample, <span class='math'>x^*</span>, so that we get <span class='math'>\hat{\theta}^* = s(x^*)</span></p>
+ <li><p> we do this a bunch of time. B times, lets say </p>
+</ul>
+
+<h4> algo-A v algo-B </h4>
+
+<p> algo-A uses the B estimates to calculate, using algebra, the standard errors for the parameter theta </p>
+<p> algo-B puts all the estimates in a list, biggest to smallest or the other-way around. and it gets rid of the top and bottom whatever-% </p>
+<p> so it's not too hard to imagine that algo-A is going to give a symmetric confidence interval, since we calculate the SE, and the CI is just the mean plus/minus the SE. And that might be ok, if you are pretty sure your data comes from a symmetric distribution. even if you dont have a large number of observations, if you know the distribution is asymptotically symmetric, you might be ok with that </p>
+<p> algo-B wont do that. if the distribution of theta isnt symmetric, theres no reason why the asymptotic distribution of the estimates of theta (never mind the small-sample distribution) would be symmetric. </p>
+
+<!-- <div id='container'></div> -->
 
 </div>
 
+<script>
+
+window.addEventListener('load', function() {
+
+  let y = {};
+  let box = new Box();
+
+  for (let i = 0; i < 100; i++) {
+   let val = Math.floor((71+box.rnorm()*14)*0.5)*2;
+   y[val] = (y[val] + 1 || 1);
+  }
+
+  console.log(y);
+  // container.appendChild(box.RETURN_CONTAINER());
+
+  // THIS IS THE NUMBER OF PIXELS
+  box.RESIZE(700, 700);
+  
+  // what is the max of y
+  let y_max = -99999999999;
+  let y_min = 99999999999;
+  Object.keys(y).forEach(function(key, index, arr) {
+    let val = parseFloat(key);
+    if (val > y_max) {
+      y_max = val;
+    }
+    if (val < y_min) {
+      y_min = val;
+    }
+  });
+  
+  
+  
+  // SET THE RANGE
+  box.RANGE_X(-1, 10);          
+  box.RANGE_Y(y_min-1, y_max+1);
+
+  // CLEAR THE CURRENT DRAWING
+  box.CLEAR_CANVAS();
+
+  // SHOW GRIDLINES 
+  box.LINE_WIDTH(1);
+  box.STROKE_STYLE('#ddd');
+  box.SHOW_GRID_X();
+  box.SHOW_GRID_Y(10);
+
+  // DRAW THE AXES 
+  box.LINE_WIDTH(2);
+  box.STROKE_STYLE('#999');
+  box.SHOW_AXES();
+  
+  
+  box.FILL_STYLE('#fc09');
+  Object.keys(y).forEach(function(key, index, arr) {
+    
+    let val = parseFloat(key);
+    let rho = y[key];
+    // box.RADIUS(0.5+rho/3);
+
+    
+    box.LINE_WIDTH(1+rho/4);
+    box.STROKE_STYLE('#fc09');
+
+     box.CONNECT_POINTS([
+      {'x':-1,'y':val},
+      {'x':10,'y':val}
+     ]);
+
+    
+  });
+
+
+
+});
+
+
+
+
+</script>
