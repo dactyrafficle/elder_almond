@@ -17,7 +17,7 @@
   <script src="./includes/katex/katex.min.js"></script>
   <script src="./includes/a.js"></script>
 
-  <title> a4 q1 &middot; </title>
+  <title> A4 Q2 &middot; </title>
 
 </head>
 
@@ -25,7 +25,40 @@
 
 <div class='section border margin padding'>
 
-
+  <h4> A4 Q2 : BINARY DEPENDENT VARIABLES </h4>
+  
+  <h4> PART-A : A PROBLEM WITH THE LINEAR PROBABILITY MODEL </h4>
+  
+  <p> if y is whether someone has or does not have a job, it's a binary variable. if we use ols, we'll have the following problems </p>
+  <ul>
+    <li><p> the linear probability model will produce fitted values outside [0,1] </p>
+    <li><p> heteroskedasticity isn't a problem, really, so i mention it here because that's the only way I could think of 2 things. i did consider describing less than 0 and more than 1 as 2 separate things, but ive clearly settled on this </p>
+  </ul>
+  
+  <h4> PART-B : PROBIT </h4> 
+  
+  <p> a likelihood function is like this. if i have a coin, and i flip it, and i get 1-0-0-1-0, what are the odds that I get that exact exact outcome ? </p>
+  <p> when you flip a coin, it's heads or tails. imagine you don't know the ratio, p, of heads to tails </p>
+  <p> so you pick the value of p that makes the probability of getting 1-0-0-1-0 as big as possible </p>
+  <p> if you have n observations, each of k coin flips, what p would max the probability of getting whatever result you got ? </p>
+  <p> if the n observations are independent, then you can multiply the probabilities of getting each observation together, and that gives you the probability of the whole set of outcomes </p>
+  <p> but for reasons, that might be annoying. so we can just take the log of the probabilities, and add them all up. </p>
+  <p> whatever <i>that</i> number is, we want to pick the value of p that makes that as big as possible </p>
+  <p> the general form of <i>that</i> number is our loglikelihood function </p>
+  <p> it'll be negative because we're taking the log of each of the probabilities, and adding them, which is the same as taking the log of the product of all the probabilities </p>
+  <p> so while we are trying to max it, it is still negative. we're just trying to make it less negative </p>
+  
+  <h4> POSITIVE BETA : WHAT IS IT </h4>
+  <p> the coefficients we estimate have a linear relationship with z, inside the cdf of the normal function <span class='math'> \Pr(y=1|x) = \Phi(z) = \Phi(\beta_0 + \beta_1 x_1 + \dots + \beta_k x_k) </span></p>
+  
+  <h4> PART-C </h4>
+  
+  <p> if someone has <span class='math'> x_i \beta = 2</span> then that implies <span class='math'> \Pr(y_i=1|x_i) = \Phi(2) = 0.977249868 </span></p>
+  <p> those are good odds </p>
+  
+  <h4> PART-D : COMPARE PROBIT TO OLS </h4>
+  
+  <p> i can't think of anything specific. what i would do is take the 600 observations we do have, and see which model is right more of the time. that's kind of like picking the one with a lower sum of squared differences. if LPM fits 0.5 or higher, assign that a 1, else 0. Obviously there'll be some wacky values for LPM. Do the same for probit. So in both cases you'll have a vector of 600 0s and 1s. lets say they're y_LPM and y_probit. pick the model with the lower sum of squared differences. </p>
 
 </div>
 
