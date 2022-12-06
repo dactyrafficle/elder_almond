@@ -21,17 +21,27 @@
 
 </head>
 
-
+<!-- opening L0 -->
 <div class='section border margin padding'>
 
   <h4> A4 Q10 : REGRESSION DISCONTINUITY </h4>
 
-  <p> this one is parametric </p>
-  <p><span class='math'> y = \beta_0 + \beta_1 \cdot x + \beta_2 \cdot d + e </span></p>
+  <p> say in this particular case, treatment <span class='math'>d</span> depends entirely on whether the assignment variable <span class='math'>w</span> crosses some threshold value, <span class='math'>w_0</span> </p>
+  <p> and say the structural equation is linear in <span class='math'>w</span>, then we can write the following parametric equation : </p> 
   
-  
-  <p><span class='math'>d = \begin{cases} 1 &\text{if } x \ge x_0 \\ 0 &\text{if } x \lt x_0 \end{cases} </span></p>
-  
+  <p><span class='math'> y = \beta_0 + \beta_1 \cdot w + \beta_2 \cdot d + e </span></p>
+    
+  <p><span class='math'>d = \begin{cases} 1 &\text{if } w \ge w_0 \\ 0 &\text{if } w \lt w_0 \end{cases} </span></p>
+
+<!--
+  look at average treatment effect of those on one side, vs the other
+  y is how much candy you have
+  w is how much you like candy
+  say, if you like candy w \gt w_c, you buy way more candy
+  on one side of the cutoff, noone got treated (d=0)
+  the other side, everyone got treated (d=1)
+-->
+
   <table class='mytables'>
     <tr>
       <td>
@@ -42,36 +52,72 @@
             <td colspan=99><div class='mybuttons noselect' id='btn_redraw' style='padding: 4px; width: 50px; margin: 0 auto;'>redraw</div></td>
           </tr>
           <tr>
-            <td><span class='math'>x_0</span></td>
+            <td><span class='math'>w_0</span></td>
             <td><input class='myinputs' id='input_x_critical' style='width: 90px;' type='number' value='1' step='0.1'></input></td>
           </tr>
         </table>
         
       </td>
-      <td><div id='container'></div></td>
+      <td><div id='container_sharp'></div></td>
     </tr>
-  </div>
+  </table>
   
-</div>
+</div> <!-- closing L0 -->
 
+<!-- opening L0 -->
+<div class='section border margin padding'>
+
+  <h4> FUZZY RDD </h4>
+  
+  <p> if crossing the threshold <span class='math'>w_0</span> just increases the probability of treatment, then we can use instrumental variables for the treatment variable <Span class='math'>d</span> </p>
+  <p> <span class='math'>w</span> still captures if we cross the threshold <span class='math'>w_0</span>, but it doesnt assure treatment, <span class='math'>d=1</span> </p>
+  
+  <p> suppose the following : </p>
+  <p><span class='math'>\Pr(d=1|w) = \begin{cases} a &\text{if } w \ge w_0 \\ b &\text{if } w \lt w_0 \end{cases} </span></p>
+
+  
+  <p> estimating <span class='math'> y = \beta_0 + \beta_1 \cdot w + \beta_2 \cdot d + e </span> with ols won't work, because <span class='math'>\text{corr}(d,e) \ne 0 </span></p>
+
+  <p> but we can use which side of the cutoff the assignment variable is on as an instrument for the treatment variable </p>
+  
+
+<h4> still trying to figure out the process </h4>
+<ul>
+  <li><p> use a sample near where we think the discontinuity is </p>
+  <li><p> something about the treatment being randomly assigned when w is near w_0 </p>
+  <li><p> the instrument : <span class='math'> z = 1 \{w \gt w_0 \} </span> : [ca marche, peut etre ca c'est la seule partie qui marche]</p>
+  <li><p> 1ST-stage : <span class='math'> \hat{d} = \hat{\gamma_0} + \hat{\gamma_1} \cdot z + \hat{\gamma_2} \cdot w + u </span> [ca marche pas forcement, je vais l'examiner plus tard]</p>
+  <li><p> 2ND-stage : regress <span class='math'>y</span> on <span class='math'>\hat{d}, w</span></p>
+</ul>
+
+
+
+  <div id='container_fuzzy'></div>
+
+</div> <!-- closing L0 -->
 
 
 <script>
 
 
 let x_critical = 1;
+let p = 0.9;
 
 window.addEventListener('load', function() {
 
   // SETUP 
-  let box = new Box();
-  container.appendChild(box.RETURN_CONTAINER());
-
+  let box_sharp = new Box();
+  let box_fuzzy = new Box();
+  
+  container_sharp.appendChild(box_sharp.RETURN_CONTAINER());
+  container_fuzzy.appendChild(box_fuzzy.RETURN_CONTAINER());
+  
   // THIS IS THE NUMBER OF PIXELS
-  box.RESIZE(500, 500);
+  box_sharp.RESIZE(500, 500);
+  box_fuzzy.RESIZE(700, 500);
   
   document.getElementById('btn_redraw').addEventListener('click', function() {
-    generate_and_draw_points(box);
+    generate_and_draw_points(box_sharp, 1);
   });
   
   document.getElementById('input_x_critical').addEventListener('input', function() {
@@ -79,7 +125,7 @@ window.addEventListener('load', function() {
     if (this.value === '') {
       this.value = 0;
       x_critical = 0;
-      generate_and_draw_points(box);
+      generate_and_draw_points(box_sharp, 1);
       return;
     }
 
@@ -93,7 +139,7 @@ window.addEventListener('load', function() {
       }
       this.value = val;
       x_critical = parseFloat(this.value);
-      generate_and_draw_points(box);
+      generate_and_draw_points(box_sharp, 1);
       
 
     
@@ -104,20 +150,22 @@ window.addEventListener('load', function() {
   
   
   // UPDATES b.current
-  box.ADD_CLICK();      
-  box.ADD_MOUSEMOVE();
+  // box.ADD_CLICK();      
+  // box.ADD_MOUSEMOVE();
 
 
 
 
-  generate_and_draw_points(box);
-
+  generate_and_draw_points(box_sharp, 1);
+  generate_and_draw_points(box_fuzzy, p);
   
 
 }); // CLOSING WINDOW.ONLOAD
 
 
-function generate_and_draw_points(box) {
+
+
+function generate_and_draw_points(box, p) {
 
   // CLEAR THE CURRENT DRAWING
   box.CLEAR_CANVAS();
@@ -133,17 +181,29 @@ function generate_and_draw_points(box) {
     x_ = box.rnorm()*2;
     x.push(x_);
     
+    
     d_ = 0;
-    if (x_ > x_critical) {
-      d_ = 1;
+    
+    if (x_ >= x_critical) {
+      if (Math.random() > (1-p)) {
+        d_ = 1;
+      }
     }
+    
+    if (x_ < x_critical) {
+      if (Math.random() > p) {
+        d_ = 1;
+      }
+    }
+    
+    
     d.push(d_);
     
     
     e_ = box.rnorm()*3;
     e.push(e_);
     
-    y_ = 2 + 2*x_ + 7*d_ + e_;
+    y_ = 2 + 2*x_ + 9*d_ + e_;
     y.push(y_);
     
   }
@@ -168,6 +228,7 @@ function generate_and_draw_points(box) {
   let y_span = y_max - y_min;
 
   for (let i = 0; i < n; i++) {
+    
     if (x[i] > x_max) {
       x_max = x[i];
     }
@@ -175,6 +236,8 @@ function generate_and_draw_points(box) {
       x_min = x[i];
     }
   }
+  
+
   
   // SET THE RANGE
   box.RANGE_X(-9, 9); 
@@ -206,6 +269,8 @@ function generate_and_draw_points(box) {
     box.POINT({'x':x[i],'y':y[i]});
     
   }
+  
+  
+  
 };
-
 </script>
