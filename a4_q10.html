@@ -17,15 +17,195 @@
   <script src="./includes/katex/katex.min.js"></script>
   <script src="./includes/a.js"></script>
 
-  <title> a4 q1 &middot; </title>
+  <title> A4 Q10 &middot; </title>
 
 </head>
 
 
-
 <div class='section border margin padding'>
 
+  <h4> A4 Q10 : REGRESSION DISCONTINUITY </h4>
 
-
+  <p> this one is parametric </p>
+  <p><span class='math'> y = \beta_0 + \beta_1 \cdot x + \beta_2 \cdot d + e </span></p>
+  
+  
+  <p><span class='math'>d = \begin{cases} 1 &\text{if } x \ge x_0 \\ 0 &\text{if } x \lt x_0 \end{cases} </span></p>
+  
+  <table class='mytables'>
+    <tr>
+      <td>
+        
+        
+        <table class='mytables margin'>
+          <tr>
+            <td colspan=99><div class='mybuttons noselect' id='btn_redraw' style='padding: 4px; width: 50px; margin: 0 auto;'>redraw</div></td>
+          </tr>
+          <tr>
+            <td><span class='math'>x_0</span></td>
+            <td><input class='myinputs' id='input_x_critical' style='width: 90px;' type='number' value='1' step='0.1'></input></td>
+          </tr>
+        </table>
+        
+      </td>
+      <td><div id='container'></div></td>
+    </tr>
+  </div>
+  
 </div>
 
+
+
+<script>
+
+
+let x_critical = 1;
+
+window.addEventListener('load', function() {
+
+  // SETUP 
+  let box = new Box();
+  container.appendChild(box.RETURN_CONTAINER());
+
+  // THIS IS THE NUMBER OF PIXELS
+  box.RESIZE(500, 500);
+  
+  document.getElementById('btn_redraw').addEventListener('click', function() {
+    generate_and_draw_points(box);
+  });
+  
+  document.getElementById('input_x_critical').addEventListener('input', function() {
+   
+    if (this.value === '') {
+      this.value = 0;
+      x_critical = 0;
+      generate_and_draw_points(box);
+      return;
+    }
+
+    let val = parseFloat(this.value);
+    
+      if (val > 7) {
+        val = 7;
+      }
+      if (val < -7) {
+        val = -7;
+      }
+      this.value = val;
+      x_critical = parseFloat(this.value);
+      generate_and_draw_points(box);
+      
+
+    
+    
+
+  });
+  
+  
+  
+  // UPDATES b.current
+  box.ADD_CLICK();      
+  box.ADD_MOUSEMOVE();
+
+
+
+
+  generate_and_draw_points(box);
+
+  
+
+}); // CLOSING WINDOW.ONLOAD
+
+
+function generate_and_draw_points(box) {
+
+  // CLEAR THE CURRENT DRAWING
+  box.CLEAR_CANVAS();
+  
+  let n = 1000;
+  let x = [];
+  let d = [];
+  let e = [];
+  let y = [];
+  
+  for (let i = 0; i < n; i++) {
+    
+    x_ = box.rnorm()*2;
+    x.push(x_);
+    
+    d_ = 0;
+    if (x_ > x_critical) {
+      d_ = 1;
+    }
+    d.push(d_);
+    
+    
+    e_ = box.rnorm()*3;
+    e.push(e_);
+    
+    y_ = 2 + 2*x_ + 7*d_ + e_;
+    y.push(y_);
+    
+  }
+  
+  // console.log(y);
+  
+  
+  let y_max = -99999999;
+  let y_min = 99999999;
+  let x_max = -99999999;
+  let x_min = 99999999;
+  
+  for (let i = 0; i < n; i++) {
+    if (y[i] > y_max) {
+      y_max = y[i];
+    }
+    if (y[i] < y_min) {
+      y_min = y[i];
+    }
+  }
+
+  let y_span = y_max - y_min;
+
+  for (let i = 0; i < n; i++) {
+    if (x[i] > x_max) {
+      x_max = x[i];
+    }
+    if (x[i] < x_min) {
+      x_min = x[i];
+    }
+  }
+  
+  // SET THE RANGE
+  box.RANGE_X(-9, 9); 
+  box.RANGE_Y(y_min - 0.05*y_span, y_max + 0.05*y_span);
+  
+  // SHOW GRIDLINES 
+  box.LINE_WIDTH(1);
+  box.STROKE_STYLE('#ddd');
+  box.SHOW_GRID_X();
+  box.SHOW_GRID_Y(10);
+
+  // DRAW THE AXES 
+  box.LINE_WIDTH(2);
+  box.STROKE_STYLE('#999');
+  box.SHOW_AXES();
+  
+  for (let i = 0; i < n; i++) {
+
+
+    box.RADIUS(2);
+    
+    if (d[i] === 1) {
+      box.FILL_STYLE('#58d5');
+    }
+    if (d[i] === 0) {
+      box.FILL_STYLE('#fc05');
+    }
+    
+    box.POINT({'x':x[i],'y':y[i]});
+    
+  }
+};
+
+</script>
